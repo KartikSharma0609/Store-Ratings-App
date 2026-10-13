@@ -1,0 +1,63 @@
+/* Twilight theme: deep indigo sky, violet dusk, warm amber horizon glow. */
+:root{
+  --sky-top:#12102b;--sky-mid:#231a48;--sky-low:#4a2a66;--horizon:#c0587a;
+  --surface:rgba(32,26,66,.78);--surface-solid:#211a45;--raised:rgba(255,255,255,.05);
+  --ink:#eeeaff;--mute:#aaa4d4;--line:rgba(190,175,255,.18);
+  --brand:#ffb86b;--brand-ink:#2a1535;--accent:#9d8cff;
+  --bad:#ff8fa3;--good:#8ee6c0;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(1px 1px at 12% 18%,#fff 60%,transparent),radial-gradient(1px 1px at 78% 12%,#fff 60%,transparent),
+    radial-gradient(1.5px 1.5px at 40% 8%,#e9e4ff 60%,transparent),radial-gradient(1px 1px at 90% 34%,#fff 60%,transparent),
+    radial-gradient(1px 1px at 6% 46%,#e9e4ff 60%,transparent),radial-gradient(1.5px 1.5px at 62% 26%,#fff 60%,transparent),
+    radial-gradient(ellipse 80% 40% at 50% 110%,rgba(255,150,110,.35),transparent 70%),
+    linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 45%,var(--sky-low) 80%,var(--horizon) 130%);
+  background-attachment:fixed;
+}
+h1,h3{font-family:Georgia,"Times New Roman",serif;margin:0 0 .75rem;letter-spacing:.01em}
+h1{font-size:1.9rem;color:#fff;text-shadow:0 0 24px rgba(157,140,255,.55)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--raised);border-radius:8px;padding:.45rem .85rem;transition:border-color .15s,background .15s}
+button:hover{border-color:var(--accent);background:rgba(157,140,255,.14)}
+button.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink);font-weight:600}
+button.primary:hover{background:#ffc98a;border-color:#ffc98a}
+button:disabled{opacity:.55;cursor:wait}
+button.link{border:0;background:none;padding:0;color:var(--brand);text-decoration:underline}
+button.link:hover{background:none;color:#ffd4a3}
+input,select{border:1px solid var(--line);background:rgba(10,8,30,.55);border-radius:8px;padding:.5rem .65rem;min-width:0}
+input::placeholder{color:#8a84b8}
+option{background:var(--surface-solid);color:var(--ink)}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.shell{max-width:980px;margin:0 auto;padding:1.25rem}
+header{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+header div{display:flex;gap:.5rem;align-items:center;color:var(--mute)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.25rem;backdrop-filter:blur(6px);box-shadow:0 10px 40px rgba(8,5,25,.45)}
+.narrow{max-width:420px;margin:7vh auto}
+.form{display:grid;gap:.8rem;margin-top:1rem;max-width:420px}
+.form label{display:grid;gap:.25rem;font-size:.9rem;color:var(--mute)}
+.tabs{display:flex;gap:.25rem;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:1rem}
+.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;color:var(--mute)}
+.tabs button:hover{background:none;color:var(--ink)}
+.tabs button.on{border-bottom-color:var(--brand);color:#fff;font-weight:600}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;backdrop-filter:blur(6px)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:.65rem .85rem;border-bottom:1px solid var(--line)}
+th{font-size:.85rem;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+th button.link{color:var(--mute);text-decoration:none}
+th button.link:hover{color:#fff}
+tbody tr:hover{background:rgba(157,140,255,.08)}
+tr:last-child td{border-bottom:0}
+.empty{color:var(--mute);text-align:center}
+.stats{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.stats div{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem;color:var(--mute)}
+.stats b{display:block;font:700 2.2rem Georgia,serif;color:var(--brand);text-shadow:0 0 18px rgba(255,184,107,.35)}
+.msg{padding:.5rem .75rem;border-radius:8px;margin:.5rem 0}
+.msg.err{background:rgba(255,106,130,.14);color:var(--bad);border:1px solid rgba(255,143,163,.35)}
+.msg.ok{background:rgba(110,220,175,.12);color:var(--good);border:1px solid rgba(142,230,192,.3)}
+.detail{margin-top:1rem}

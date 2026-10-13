@@ -1,0 +1,69 @@
+name: store-ratings
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: store_ratings
+      POSTGRES_USER: ${DB_USER:?set DB_USER in .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [db]            # no published ports: only the backend can reach it
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d store_ratings"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]   # minimum the postgres entrypoint needs
+    mem_limit: 512m
+    pids_limit: 200
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/store_ratings
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+    networks: [db, web]       # not published to the host
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    mem_limit: 256m
+    cpus: "1.0"
+    pids_limit: 100
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:8080"           # the only port exposed to the host
+    networks: [web]
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    mem_limit: 128m
+    pids_limit: 100
+
+networks:
+  db:
+    internal: true            # database network has no route to the internet
+  web:
+
+volumes:
+  pgdata:

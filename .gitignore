@@ -1,0 +1,22 @@
+# dependencies and build output
+node_modules/
+dist/
+
+# secrets: real env files stay local, templates are committed
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+
+# database backups
+*.sql.gz
+backups/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
