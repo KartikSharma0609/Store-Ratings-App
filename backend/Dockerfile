@@ -1,14 +1,12 @@
-# ---- stage 1: production dependencies only ----
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-# ---- stage 2: minimal runtime ----
 FROM node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app
-# Code stays root-owned and read-only to the app; it runs as the unprivileged "node" user.
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json schema.sql ./
 COPY src ./src

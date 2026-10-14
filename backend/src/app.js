@@ -13,19 +13,16 @@ const SORTABLE = {
   public: ['name', 'address', 'rating'],
 };
 
-// Compared against when the email is unknown, so response time doesn't reveal which emails exist.
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 10);
 
 function createApp(pool, secret = process.env.JWT_SECRET) {
   if (!secret || secret.length < 32) throw new Error('JWT_SECRET is required and must be at least 32 characters');
   const app = express();
-  app.set('trust proxy', 1); // one proxy hop (nginx) so rate limits see the real client IP
+  app.set('trust proxy', 1);
   app.use(helmet());
-  // Same-origin by default (nginx / Vite proxy). Set CORS_ORIGIN=https://site1,https://site2 to allow others.
   app.use(cors({ origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : false }));
   app.use(express.json({ limit: '10kb' }));
 
-  // Registered before the rate limiter so container health checks are never throttled.
   app.get('/api/health', async (req, res) => {
     try {
       await pool.query('SELECT 1');
@@ -73,7 +70,6 @@ function createApp(pool, secret = process.env.JWT_SECRET) {
     }
   };
 
-  // ---------- auth ----------
   app.post('/api/auth/signup', wrap(async (req, res) => {
     const r = await createUser(req.body, 'USER');
     if (r.error) return fail(res, r.code || 400, r.error);
@@ -102,7 +98,6 @@ function createApp(pool, secret = process.env.JWT_SECRET) {
     res.json({ message: 'Password updated.' });
   }));
 
-  // ---------- admin ----------
   const admin = auth('ADMIN');
 
   app.get('/api/admin/stats', admin, wrap(async (req, res) => {
@@ -171,7 +166,6 @@ function createApp(pool, secret = process.env.JWT_SECRET) {
     res.json(rows);
   }));
 
-  // ---------- normal user ----------
   app.get('/api/stores', auth('USER'), wrap(async (req, res) => {
     const params = [req.user.id];
     const where = [];
@@ -203,7 +197,6 @@ function createApp(pool, secret = process.env.JWT_SECRET) {
     res.json({ storeId, rating });
   }));
 
-  // ---------- store owner ----------
   app.get('/api/owner/dashboard', auth('OWNER'), wrap(async (req, res) => {
     const s = await pool.query('SELECT id, name FROM stores WHERE owner_id = $1', [req.user.id]);
     if (!s.rows[0]) return res.json({ store: null, average: 0, raters: [] });
@@ -215,7 +208,7 @@ function createApp(pool, secret = process.env.JWT_SECRET) {
   }));
 
   app.use((req, res) => fail(res, 404, 'Not found.'));
-  app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  app.use((err, req, res, next) => {
     console.error(err);
     fail(res, 500, 'Something went wrong. Try again.');
   });

@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks: [db]            # no published ports: only the backend can reach it
+    networks: [db]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d store_ratings"]
       interval: 10s
@@ -18,7 +18,7 @@ services:
       retries: 5
     security_opt: ["no-new-privileges:true"]
     cap_drop: [ALL]
-    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]   # minimum the postgres entrypoint needs
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
     mem_limit: 512m
     pids_limit: 200
 
@@ -35,7 +35,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
-    networks: [db, web]       # not published to the host
+    networks: [db, web]
     read_only: true
     security_opt: ["no-new-privileges:true"]
     cap_drop: [ALL]
@@ -50,7 +50,7 @@ services:
       backend:
         condition: service_healthy
     ports:
-      - "8080:8080"           # the only port exposed to the host
+      - "8080:8080"
     networks: [web]
     read_only: true
     tmpfs:
@@ -62,7 +62,7 @@ services:
 
 networks:
   db:
-    internal: true            # database network has no route to the internet
+    internal: true
   web:
 
 volumes:

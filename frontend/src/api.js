@@ -26,7 +26,6 @@ export async function api(path, { method = 'GET', body, query } = {}) {
   return data;
 }
 
-// Same rules as the backend.
 export const rules = {
   name: (s) => (s.trim().length >= 20 && s.trim().length <= 60) || 'Name must be 20 to 60 characters.',
   email: (s) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s.trim()) || 'Enter a valid email address.',

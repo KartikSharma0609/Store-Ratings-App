@@ -8,7 +8,6 @@ const validPassword = (s) =>
   typeof s === 'string' && s.length >= 8 && s.length <= 16 && /[A-Z]/.test(s) && /[^A-Za-z0-9]/.test(s);
 const validRating = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
 
-// Returns an error message, or null when the user fields are valid.
 function userError(b = {}) {
   if (!validName(b.name)) return 'Name must be 20 to 60 characters.';
   if (!validEmail(b.email)) return 'Enter a valid email address.';

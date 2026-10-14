@@ -1,4 +1,3 @@
-// Builds WHERE (ILIKE on text columns, exact on role) and a whitelisted ORDER BY.
 function listClauses(q, filterCols, sortCols, params) {
   const where = [];
   for (const c of filterCols) {
